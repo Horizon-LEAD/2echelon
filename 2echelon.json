@@ -1,0 +1,54 @@
+{
+    "$schema": "",
+    "$id": "path://to/git.repo",
+    "title": "Echelon Model",
+    "version": "echelon v1",
+    "description": "calculating the number of resources and distance for 2 echelon networks (first leg, second leg)",
+    "application-information": {
+        "application-type": "script",
+        "application-language": "R",
+        "environment": "5.4.0-66-generic #78~18.04.1-Ubuntu 20.04.2 LTS (Focal Fossa)",
+        "application-location": "git://path-to-code",
+        "build-required": "yes",
+        "build-instruction": "./requirements.sh",
+        "environment-variables": "PATH=$PATH:/shared/opt/",
+        "execution-instruction": "Rscript PATH/2ECHELON/scenarioASIS_Madrid.R PATH/2ECHELON/INPUT/config.csv PATH/2ECHELON/INPUT/services.csv PATH/2ECHELON/INPUT/facilitiesASIS.csv PATH/2ECHELON/INPUT/vehiclesASIS.csv PATH/2ECHELON"
+    },
+    "data-compatibility": {
+        "input-data": [
+            {
+                "key": "1",
+                "type": "echelon_input_scenario",
+                "src": "PATH/2ECHELON/scenarioASIS_Madrid.R"
+            },
+            {
+                "key": "2",
+                "type": "echelon_input_configure_file",
+                "src": "PATH/2ECHELON/INPUT/config.csv"
+            },
+            {
+            	"key": "3",
+            	"type": "echelon_input_services_file",
+            	"src": "PATH/2ECHELON/INPUT/services.csv"
+            },
+            {
+            	"key": "4",
+            	"type": "echelon_input_facilitiesASIS_file",
+            	"src": "PATH/2ECHELON/INPUT/facilitiesASIS.csv"
+            }
+            {
+            	"key": "5",
+            	"type": "echelon_input_vehiclesASIS_file",
+            	"src": "PATH/2ECHELON/INPUT/vehiclesASIS.csv"
+            
+            }
+        ],
+        "output-data": [
+            {
+                "key": "6",
+                "type": "echelon_file_output",
+                "src": "PATH/2ECHELON"
+            }
+        ]
+    }
+}
