@@ -1,2 +1,0 @@
-"Echelon";"zoneName";"zoneAvgSize";"zoneArea";"zoneTotalDeliveries";"vehicleName";"vehicleCapacity";"vehicleSpeed";"vehicleStopTime";"facilityName";"facilityHandlingTime";"totalDistance";"totalTime";"m"
-1;1;2.52222222222222;4.56027705032226;90;"Van";"161";"45";"0.1";"San Fernando";"0.5";84.3794159292217;10.8750981317605;2

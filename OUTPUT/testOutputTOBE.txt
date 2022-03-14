@@ -1,3 +1,0 @@
-"Echelon";"zoneName";"zoneAvgSize";"zoneArea";"zoneTotalDeliveries";"vehicleName";"vehicleCapacity";"vehicleSpeed";"vehicleStopTime";"facilityName";"facilityHandlingTime";"totalDistance";"totalTime";"m"
-1;"1";"227";"0";"0";"Van";"161";"45";"0";"San Fernando";"0.5";37.1400604705717;0.825334677123815;1
-2;"2";"2.52222222222222";"4.56027705032226";"90";"E-Trike";" 34";"45";"0.1";"UCC Departure";"0.25";17.5594561897282;9.39021013754952;7
