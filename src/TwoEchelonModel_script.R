@@ -42,12 +42,12 @@ calculateSolutionLeg<- function(zone, vehicle, facility, config) {
   #to the delivery points
   initialDistance = calculateTotalDistance(zone, facility,1,config) #distance if only 1 vehicle
  
-  m1 =calculateM1(vehicle,zone) #number of resources considering capacity constraint
-  m2 = calculateM2(initialDistance, vehicle, zone, facility) #number of resources considering time constraint
+  m1 = calculateM1(vehicle, zone) #number of resources considering capacity constraint
+  m2 = calculateM2(initialDistance, vehicle, zone, facility, config) #number of resources considering time constraint
   #browser()
   
-  m =max(m1,m2) #the number of resources is the max required
-  totalDistance = calculateTotalDistance(zone, facility,m,config) #total distance with the m vehicles
+  m = max(m1, m2) #the number of resources is the max required
+  totalDistance = calculateTotalDistance(zone, facility, m, config) #total distance with the m vehicles
   totalTime = calculateTotalTime(totalDistance, vehicle, zone)
   
   'solution = list(vehicle, zone, facility, config, totalDistance, totalTime, m)'
@@ -159,7 +159,7 @@ calculateM1<- function(vehicle, zone) {
   return (db_m1)
 }
 
-calculateM2<- function(firstDistance, vehicle, zone, facility) {
+calculateM2<- function(firstDistance, vehicle, zone, facility, config) {
   #calculate the number of vehicles required according to the capacity of the vehicle
   #and the distance within the delivery area
   #vehicle =  (name, capacity in parcels, speed (km/h), stop time (h))
