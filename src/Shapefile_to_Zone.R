@@ -11,7 +11,6 @@ library(ggplot2)
 library(ggmap)
 library(geojsonio)
 
-
 '--------------------------------------------------------------------------------------------------------------------------------------------------'
 'obtain a zip file from open source url and unzip the geographic files in a temporary file '
 '--------------------------------------------------------------------------------------------------------------------------------------------------'
@@ -51,8 +50,7 @@ Read_area <- function(str_file_name) {
 
 Read_centroid <- function(str_file_name) {
   'It reads the file str_file_name. A sapefile with geographic information of the delivery area and returns the centorid'
-  
-  
+
   list.of.packages <- c("sp","sf", "raster","dplyr","spData","ggplot2", "ggmap") 
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
@@ -61,37 +59,31 @@ Read_centroid <- function(str_file_name) {
   zone=st_read(dsn=str_file_name)
   zone = st_transform(zone, crs = 4326)  
   CSR = st_crs(zone)
-
-  
   centroid=st_centroid(st_polygonize(zone))
 
   return (centroid)
 }
-
-
 
 Read_zone_Lyon <- function() {
   # Check and install packages
   list.of.packages <- c("sp","sf", "raster","dplyr","spData","ggplot2", "ggmap", "geojsonio") 
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
-  
+
   # file <- system.file("examples", "california.geojson", package = "geojsonio")
-  
- 
+
   p = geojsonio::geojson_read("Lyon/confluence_area.geojson", what = "sp", parse = TRUE)
 
   r = st_as_sf(p)
   area=st_area(r)
   print(area)
-  
+
   centroid_lyon =st_centroid(r)
   print(centroid_lyon)
-  
+
   plot(st_geometry(r), col = 'white', border = 'grey', axes = TRUE)
   plot(st_geometry(st_centroid(r)), pch = 3, col = 'red', add = TRUE)
-  
-  
+
   return (centroid_lyon)
 }
 
@@ -100,17 +92,15 @@ Read_facilities_Lyon <- function() {
   list.of.packages <- c("sp","sf", "raster","dplyr","spData","ggplot2", "ggmap", "geojsonio") 
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
-  
+
   # file <- system.file("examples", "california.geojson", package = "geojsonio")
-  
+
    p = geojsonio::geojson_read("Lyon/distribution_center.geojson", what = "sp", parse = TRUE)
-  
+
   r = st_as_sf(p)
   print(r)
   plot(r, pch = 2, col = 'red', axes = TRUE)
- 
-  
-  
+
   return (r)
 }
 
@@ -121,20 +111,13 @@ Read_demand_Lyon <- function() {
   if(length(new.packages)) install.packages(new.packages)
   
   # file <- system.file("examples", "california.geojson", package = "geojsonio")
-  
- 
+
   print(a)
   s = geojsonio::geojson_read("Lyon/demand.geojson", what = "sp", parse = TRUE)
   
   demand = st_as_sf(s)
   print(demand)
   plot(demand, add=TRUE)
-  
 
-  
   return (demand)
 }
-                        
-
-  
-

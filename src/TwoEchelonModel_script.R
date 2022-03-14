@@ -30,9 +30,9 @@ calculateSolutionTwoLegs <- function(zone1, vehicle1, facility1, zone2, vehicle2
  
   solutionFirstLeg = calculateSolutionLeg(zone1,vehicle1, facility1, config)
   solutionSecondLeg = calculateSolutionLeg(zone2, vehicle2, facility2, config)
-  
-  
+
   solution=c(solutionFirstLeg, solutionSecondLeg)
+
   return (solution)
 }
 
@@ -55,8 +55,6 @@ calculateSolutionLeg<- function(zone, vehicle, facility, config) {
   solution = c(totalDistance, totalTime, m)
   
   return (solution)
-  
-  
 }
 
 
@@ -74,10 +72,9 @@ calculateTotalDistanceDirectShipment <- function(zone, facility, m) {
       print("2")
       db_dhi = calculateGeodesicDistance(zone[4], zone[5], facility[3], facility[4])
     } 
- 
-  
+
   db_dhi = db_dhi * 2 * m #roundtrip distance
-  
+
   return (db_dhi)
 }
 
@@ -109,11 +106,9 @@ calculatelDistanceDistributionArea <- function(k, zone) {
 #calculated the distance to deliver to the delivery points within the delivery zone according to Daganzo's approach
 #zone = name, delivery size (number of boxes), area (m2), latitude, longitude, number of delivery points
 
-DaganzoDistance = k * sqrt(as.double(zone[3])  * as.double(zone[6])) #distance of delivering the nodes concentrated into the delivery zone
-return (DaganzoDistance)
+  DaganzoDistance = k * sqrt(as.double(zone[3])  * as.double(zone[6])) #distance of delivering the nodes concentrated into the delivery zone
 
-  
-  
+  return (DaganzoDistance)
 }
 
 
@@ -125,9 +120,8 @@ calculateTotalDistance <- function(zone, facility,m, config) {
   
   db_dhi = calculateTotalDistanceDirectShipment(zone, facility, m)
   db_dhi = db_dhi + calculatelDistanceDistributionArea(config[2], zone)
+
   return (db_dhi)
-  
-  
 }
 
 
@@ -136,15 +130,12 @@ calculateTotalTime <- function(distance, vehicle, zone) {
   #and the distance within the delivery area
   #vehicle =  (name, capacity (Porto in boxes), speed (km/h), stop time (h))
   #zone = name, delivery size (number of boxes), area (m2), latitude, longitude, number of delivery points
- 
-  
+
   db_time = (distance) / as.double(vehicle[3])
   db_time = db_time + as.double(vehicle[4]) * as.double(zone[6])
   #browser()
- 
+
   return (db_time)
-  
-  
 }
 
 calculateM1<- function(vehicle, zone) {
@@ -163,13 +154,9 @@ calculateM1<- function(vehicle, zone) {
   }
   else {
     db_m1 = as.integer(db_m1)
-    
   }
-  
-  
+
   return (db_m1)
-  
-  
 }
 
 calculateM2<- function(firstDistance, vehicle, zone, facility) {
@@ -185,23 +172,13 @@ calculateM2<- function(firstDistance, vehicle, zone, facility) {
   db_m2 = db_m2 / (as.double(config[1]) - as.double(facility[2]))
   
   dec = db_m2 - as.integer(db_m2)
-  
   if(dec>0){
     db_m2 = as.integer(db_m2)+1
     
   }
   else {
-    db_m2 = as.integer(db_m2)
-    
+    db_m2 = as.integer(db_m2) 
   }
- 
+
   return (db_m2)
-  
-  
 }
-
-
-
-
-
-

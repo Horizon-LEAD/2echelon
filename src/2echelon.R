@@ -25,11 +25,10 @@ str_file_name=paste(file_dir,"/TEMP/Madrid_Central.shp",sep="")
 #-----------------------------------------------------------
 #read default paremeters from config
 #----------------------------------------------------------
-fdconfig = read.csv(file_config,header=T,";")
-configUI = as.matrix(fdconfig,nrow=2,ncol=7,byrow=TRUE)
+fdconfig = read.csv(file_config, header=T, ";")
+configUI = as.matrix(fdconfig,nrow=2, ncol=7, byrow=TRUE)
 
-
-k= configUI[1,1]
+k = configUI[1,1]
 workshift = configUI[1,2]
 branchHandlingTime = configUI[1,3]
 UCCHandlingTime = configUI[1,4]
@@ -42,16 +41,18 @@ distanceType = configUI[1,7]
 #document (.csv) contains the information for the 
 #first leg and the the seconf row for the second leg
 #---------------------------------------------------------------
-fdFacilities=read.csv(file_facilities_ASIS,header=F,";")
+fdFacilities = read.csv(file_facilities_ASIS, header=F, ";")
 print(file_facilities_ASIS)
 
 #FacilityUI = Information in the file (Name	Address	Number	City	ZipCode	Latitude	Longitude	HandlingTime (minutes) StartHour	EndHour)
-facilityUI = as.matrix(fdFacilities,nrow=3,ncol=10,byrow=TRUE)
+facilityUI = as.matrix(fdFacilities, nrow=3 ,ncol=10, byrow=TRUE)
 
 #Model data input : facility = (name, handling time(h), latitude, longitude)'
 #facility first leg in San Fernando = origin of the route
-facility1 = c(facilityUI[1,1], as.integer(facilityUI[1,8])/60, as.double(facilityUI[1,6]),as.double(facilityUI[1,7]))
-
+facility1 = c(facilityUI[1,1],
+              as.integer(facilityUI[1,8])/60,
+              as.double(facilityUI[1,6]),
+              as.double(facilityUI[1,7]))
 
 #--------------------------------------------------------------------
 #Read data od the vehicles to serve the consumer.  First row of the
@@ -59,9 +60,9 @@ facility1 = c(facilityUI[1,1], as.integer(facilityUI[1,8])/60, as.double(facilit
 #first leg and the the seconf row for the second leg
 #--------------------------------------------------------------------
 #vehicles'
-fdVehicles=read.csv(file_vehicles_ASIS,header=F,";")
+fdVehicles = read.csv(file_vehicles_ASIS, header=F, ";")
 #vehiclesUI = (type, capacityParcels, CapacityKg, CapacityM3, FixedCosts, AverageSpeed(km/h), MaxKilometerDay)
-vehiclesUI = as.matrix(fdVehicles,nrow=3,ncol=7,byrow=TRUE)
+vehiclesUI = as.matrix(fdVehicles, nrow=3, ncol=7, byrow=TRUE)
 
 #vehicle =  (name, capacity (Porto in boxes), speed (km/h), stop time (h))
 vehicle1 = c(vehiclesUI[1,1], vehiclesUI[1,2], vehiclesUI[1,6], stopTimeSecondEchelon)
@@ -73,13 +74,13 @@ vehicle1 = c(vehiclesUI[1,1], vehiclesUI[1,2], vehiclesUI[1,6], stopTimeSecondEc
 #----------------------------------------------------------------------
 
 #read the file with the orders for echelon 1 (aggregated orders) and echelon 2 (average size of the orders)'
-fd=read.csv(file_services,header=F,";")
-zoneAvgOrderSize=mean(fd$V20)
-zoneNOrders=nrow(fd)
+fd = read.csv(file_services, header=F, ";")
+zoneAvgOrderSize = mean(fd$V20)
+zoneNOrders = nrow(fd)
 zoneAggregatedOrdersSize = sum(fd$V20)
 #read geographic data od the delivery area'
-print(getwd())
-Read_url_GeographicData(str_url,file_dir)
+# print(getwd())
+Read_url_GeographicData(str_url, file_dir)
 zoneArea = Read_area(str_file_name)
 zoneArea = zoneArea/1000000
 zoneCentroid = Read_centroid(str_file_name)
@@ -96,18 +97,15 @@ zoneCentroidY = zoneCoordinatesCentroid[1]
 #   zone 1: avgSize is the average size
 #---------------------------------------------------------------------------
 #create the zone for echelon 1: 1 delivery point (UCC) from the branch with agregated orders
-zone1 = c(1,zoneAvgOrderSize,zoneArea, zoneCentroidX, zoneCentroidY,zoneNOrders)
-
+zone1 = c(1,zoneAvgOrderSize, zoneArea, zoneCentroidX, zoneCentroidY,zoneNOrders)
 
 #------------------------------------------------------------------------------'
 #workshift = 8 for the tow legs. We assume independent resources and times
 #K = parameter required for the model
-config =c(workshift,k)
+config = c(workshift, k)
 #------------------------------------------------------------------------------'
 
 solution = calculateSolutionLeg(zone1, vehicle1, facility1, config)
-
-
 
 dfSolution = data.frame(Echelon= c(1),
                        zoneName = c(zone1[1]),
@@ -127,10 +125,9 @@ dfSolution = data.frame(Echelon= c(1),
                        totalDistance = c(solution[1]),
                        totalTime = c(solution[2]),
                        m = c(solution[3])
-                                                
 )
-#write.csv2(dfSolution,"./Madrid_Centro/testOutputASIS.csv",sep =";", row.names = FALSE, dec=".")
-write.table(dfSolution,file_ouptut_ASIS,sep =";", dec=".", row.names = FALSE)
 
-                       
+#write.csv2(dfSolution,"./Madrid_Centro/testOutputASIS.csv",sep =";", row.names = FALSE, dec=".")
+write.table(dfSolution, file_ouptut_ASIS, sep =";", dec=".", row.names=FALSE)
+
 print("Terminado AS IS")
