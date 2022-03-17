@@ -1,133 +1,179 @@
+#' Script for executing Madrid scenarios
+#'
+#' Rscript <dir>/scenarioASIS_Madrid.R U:/20211027ZLC/INPUT/config.csv
+#'                                    U:/20211027ZLC/INPUT/services.csv
+#'                                    U:/20211027ZLC/INPUT/facilitiesASIS.csv
+#'                                    U:/20211027ZLC/INPUT/vehiclesASIS.csv
+#'                                    U:/20211027ZLC
 
-#Rscript U:/20211027ZLC/scenarioASIS_Madrid.R U:/20211027ZLC/INPUT/config.csv U:/20211027ZLC/INPUT/services.csv U:/20211027ZLC/INPUT/facilitiesASIS.csv U:/20211027ZLC/INPUT/vehiclesASIS.csv U:/20211027ZLC
+library("argparse")
 
-#--------------------------------------------------------------
-#Description: Script for executing Madrid scenarios
-#--------------------------------------------------------------
-args= commandArgs(trailingOnly = TRUE)
-if (length(args)==0) {
-  stop("Four arguments need to be supplied", call.=FALSE)
-} else if (length(args)==5) {
-  # default output file
-  file_config = args[1]
-  file_services = args[2]
-  file_facilities_ASIS=args[3]
-  file_vehicles_ASIS =args[4]
-  file_dir=args[5]
+#' Obtain a zip file from open source url
+#' Unzip file to given directory
+download_unzip <- function(str_url, file_dir) {
+  download.file(url = str_url, destfile = paste(file_dir, "/data.zip",
+                sep = ""))
+  unzip(zipfile = paste(file_dir, "/data.zip", sep = ""), overwrite = T,
+        exdir = paste(file_dir, "/", sep = ""))
 }
-file_ouptut_ASIS =paste(file_dir,"/OUTPUT/testOutputASIS.txt",sep="")
-source(paste(file_dir,"/Shapefile_to_Zone.R",sep=""))
-source(paste(file_dir,"/TwoEchelonModel_script.R",sep=""))
 
 
-str_url= "https://datos.madrid.es/egob/catalogo/300229-0-trafico-madrid-central.zip"
-str_file_name=paste(file_dir,"/TEMP/Madrid_Central.shp",sep="")
-#-----------------------------------------------------------
-#read default paremeters from config
-#----------------------------------------------------------
-fdconfig = read.csv(file_config, header=T, ";")
-configUI = as.matrix(fdconfig,nrow=2, ncol=7, byrow=TRUE)
+# CLI argument parsing
+parser <- ArgumentParser(description = "Process some integers")
+parser$add_argument("config", type = "character",
+                    help = "Config file")
+parser$add_argument("services", type = "character",
+                    help = "Services file")
+parser$add_argument("facilities", type = "character",
+                    help = "Facilities file")
+parser$add_argument("vehicles", type = "character",
+                    help = "Vehicles file")
+parser$add_argument("out", type = "character",
+                    help = "Output directory")
+parser$add_argument("--shapefile", type = "character",
+                    default = paste("https://datos.madrid.es/egob/catalogo/",
+                                    "300229-0-trafico-madrid-central.zip",
+                                    sep = ""),
+                    help = "URL for shapefile ZIP")
+parser$add_argument("--shapefile-name", type = "character",
+                    default = "Madrid_Central.shp",
+                    help = "Name of the file to be used from ZIP")
+parser$add_argument("--out-filename", type = "character",
+                    default = "output.csv",
+                    help = "Name of the output file")
 
-k = configUI[1,1]
-workshift = configUI[1,2]
-branchHandlingTime = configUI[1,3]
-UCCHandlingTime = configUI[1,4]
-stopTimeFirstEchelon = configUI[1,5]
-stopTimeSecondEchelon = configUI[1,6]
-distanceType = configUI[1,7]
+args <- parser$parse_args()
 
-#---------------------------------------------------------------
-#Read data of facilities to serve the consumers. First row of the
-#document (.csv) contains the information for the 
-#first leg and the the seconf row for the second leg
-#---------------------------------------------------------------
-fdFacilities = read.csv(file_facilities_ASIS, header=F, ";")
-print(file_facilities_ASIS)
+file_config <- args$config
+file_services <- args$services
+file_facilities_asis <- args$facilities
+file_vehicles_asis <- args$vehicles
+out_dir <- args$out
+file_output_asis <- file.path(out_dir, args$out_filename)
 
-#FacilityUI = Information in the file (Name	Address	Number	City	ZipCode	Latitude	Longitude	HandlingTime (minutes) StartHour	EndHour)
-facilityUI = as.matrix(fdFacilities, nrow=3 ,ncol=10, byrow=TRUE)
+str_url <- args$shapefile
+str_file_name <- file.path(out_dir, args$shapefile_name)
 
-#Model data input : facility = (name, handling time(h), latitude, longitude)'
-#facility first leg in San Fernando = origin of the route
-facility1 = c(facilityUI[1,1],
-              as.integer(facilityUI[1,8])/60,
-              as.double(facilityUI[1,6]),
-              as.double(facilityUI[1,7]))
+# find directory of the script and source deps
+cli_args <- commandArgs(trailingOnly = FALSE)
+script_name <- sub("--file=", "", cli_args[grep("--file=", cli_args)])
+script_dirname <- dirname(script_name)
 
-#--------------------------------------------------------------------
-#Read data od the vehicles to serve the consumer.  First row of the
-#document (.csv) contains the information for the 
-#first leg and the the seconf row for the second leg
-#--------------------------------------------------------------------
-#vehicles'
-fdVehicles = read.csv(file_vehicles_ASIS, header=F, ";")
-#vehiclesUI = (type, capacityParcels, CapacityKg, CapacityM3, FixedCosts, AverageSpeed(km/h), MaxKilometerDay)
-vehiclesUI = as.matrix(fdVehicles, nrow=3, ncol=7, byrow=TRUE)
+source(file.path(script_dirname, "Shapefile_to_Zone.R"))
+source(file.path(script_dirname, "TwoEchelonModel_script.R"))
 
-#vehicle =  (name, capacity (Porto in boxes), speed (km/h), stop time (h))
-vehicle1 = c(vehiclesUI[1,1], vehiclesUI[1,2], vehiclesUI[1,6], stopTimeSecondEchelon)
+#read geographic data od the delivery area
+download_unzip(str_url, out_dir)
+
+start_time <- Sys.time()
+#------------------------------------------------------------------------------
+# Read config parameters from config file
+fdconfig <- read.csv(file_config, header = T, ";")
+config_ui <- as.matrix(fdconfig, nrow = 2, ncol = 7, byrow = TRUE)
+
+k <- config_ui[1, 1]
+workshift <- config_ui[1, 2]
+branch_handling_time <- config_ui[1, 3]
+ucc_handling_time <- config_ui[1, 4]
+stop_time_first_echelon <- config_ui[1, 5]
+stop_time_second_echelon <- config_ui[1, 6]
+distance_type <- config_ui[1, 7]
+
+#------------------------------------------------------------------------------
+# Read data of facilities to serve the consumers.
+#
+# First row of the document (.csv) contains the information for the first leg
+# and the the seconf row for the second leg
+#
+# facility_ui: Information of vehicles from the file
+# facility_ui = (Name, Address, Number, City, ZipCode, Latitude, Longitude,
+#                HandlingTime (minutes), StartHour, EndHour)
+#
+# Model data input : facility = (name, handling time(h), latitude, longitude)'
+# facility first leg in San Fernando = origin of the route
+fd_facilities <- read.csv(file_facilities_asis, header = F, ";")
+print(file_facilities_asis)
+facility_ui <- as.matrix(fd_facilities, nrow = 3, ncol = 10, byrow = TRUE)
+facility1 <- c(facility_ui[1, 1],
+               as.integer(facility_ui[1, 8]) / 60,
+               as.double(facility_ui[1, 6]),
+               as.double(facility_ui[1, 7]))
+
+#------------------------------------------------------------------------------
+# Read data od the vehicles to serve the consumer.
+#
+# First row of the document (.csv) contains the information for the first leg
+# and the the seconf row for the second leg
+#
+# vehicles_ui: Information of vehicles from the file
+# vehicles_ui = (type, capacityParcels, CapacityKg, CapacityM3, FixedCosts,
+#                AverageSpeed(km/h), MaxKilometerDay)
+#
+# vehicle =  (name, capacity (Porto in boxes), speed (km/h), stop time (h))
+fd_vehicles <- read.csv(file_vehicles_asis, header = F, ";")
+vehicles_ui <- as.matrix(fd_vehicles, nrow = 3, ncol = 7, byrow = TRUE)
+vehicle1 <- c(vehicles_ui[1, 1], vehicles_ui[1, 2], vehicles_ui[1, 6],
+              stop_time_second_echelon)
 
 
-#---------------------------------------------------------------------
-#read the data of the services and geographic data of the delivery area
-#to create the zones.
-#----------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Read the data of the services and geographic data of the delivery area
+# to create the zones.
 
-#read the file with the orders for echelon 1 (aggregated orders) and echelon 2 (average size of the orders)'
-fd = read.csv(file_services, header=F, ";")
-zoneAvgOrderSize = mean(fd$V20)
-zoneNOrders = nrow(fd)
-zoneAggregatedOrdersSize = sum(fd$V20)
-#read geographic data od the delivery area'
-# print(getwd())
-Read_url_GeographicData(str_url, file_dir)
-zoneArea = Read_area(str_file_name)
-zoneArea = zoneArea/1000000
-zoneCentroid = Read_centroid(str_file_name)
-zoneCentroidGeometry = st_geometry(zoneCentroid)
-zoneCoordinatesCentroid = st_coordinates(zoneCentroidGeometry)
-zoneCentroidX = zoneCoordinatesCentroid[2]
-zoneCentroidY = zoneCoordinatesCentroid[1]
+# Read the file with the orders for echelon 1 (aggregated orders) and echelon 2
+# (average size of the orders)
+#
+# zone  <- c(1, zone_avg_order_size, zone_area(km2),
+#            zone_centroid_x(latitude), zone_centroid_y(longitude),
+#            zone_no_orders(#services))
+fd_services <- read.csv(file_services, header = F, ";")
+zone_avg_order_size <- mean(fd_services$V20)
+zone_no_orders <- nrow(fd_services)
+zone_aggregated_orders_size <- sum(fd_services$V20)
+zone_area <- read_area(str_file_name) / 1000000
+zone_centroid <- read_centroid(str_file_name)
+zone_centroid_geometry <- st_geometry(zone_centroid)
+zone_coordinates_centroid <- st_coordinates(zone_centroid_geometry)
+zone_centroid_x <- zone_coordinates_centroid[2]
+zone_centroid_y <- zone_coordinates_centroid[1]
+# create the zone for echelon 1:
+# - 1 delivery point (UCC) from the branch with agregated orders
+zone1 <- c(1, zone_avg_order_size, zone_area,
+           zone_centroid_x, zone_centroid_y,
+           zone_no_orders)
 
-#----------------------------------------------------------------------------
-#Zone 1 
-#   ZOne 1: latitude and longitude of the centroid
-#   zone 1: area of delivery zone (WARNING in km2)
-#   zone 1: number of delivery nodes = number of services
-#   zone 1: avgSize is the average size
-#---------------------------------------------------------------------------
-#create the zone for echelon 1: 1 delivery point (UCC) from the branch with agregated orders
-zone1 = c(1,zoneAvgOrderSize, zoneArea, zoneCentroidX, zoneCentroidY,zoneNOrders)
-
-#------------------------------------------------------------------------------'
+#------------------------------------------------------------------------------
 #workshift = 8 for the tow legs. We assume independent resources and times
 #K = parameter required for the model
-config = c(workshift, k)
-#------------------------------------------------------------------------------'
+config <- c(workshift, k)
+#------------------------------------------------------------------------------
 
-solution = calculateSolutionLeg(zone1, vehicle1, facility1, config)
-
-dfSolution = data.frame(Echelon= c(1),
-                       zoneName = c(zone1[1]),
-                       zoneAvgSize = c (zone1[2]),
-                       zoneArea =  c (zone1[3]),
-                       #zoneLatitude = c (zoneFirstLeg[4], zoneSecondLeg[4]),
-                       #zoneLongitude = c (zoneFirstLeg[5], zoneSecondLeg[5]),
-                       zoneTotalDeliveries = c (zone1[6]),
-                       vehicleName = c(vehicle1[1]),
-                       vehicleCapacity = c(vehicle1[2]),
-                       vehicleSpeed = c(vehicle1[3]),
-                       vehicleStopTime = c(vehicle1[4]),
-                       facilityName = c(facility1[1]),
-                       facilityHandlingTime = c(facility1[2]),
-                       #facilityLatitude = c(facilityFirstLeg[3],facilitySecontLeg[3]),
-                       #facilityLongitude = c(facilityFirstLeg[4],facilitySecontLeg[4]),
-                       totalDistance = c(solution[1]),
-                       totalTime = c(solution[2]),
-                       m = c(solution[3])
+solution <- calculateSolutionLeg(zone1, vehicle1, facility1, config)
+df_solution <- data.frame(
+  Echelon = c(1),
+  zoneName = c(zone1[1]),
+  zoneAvgSize = c(zone1[2]),
+  zoneArea =  c(zone1[3]),
+  #zoneLatitude = c (zoneFirstLeg[4], zoneSecondLeg[4]),
+  #zoneLongitude = c (zoneFirstLeg[5], zoneSecondLeg[5]),
+  zoneTotalDeliveries = c(zone1[6]),
+  vehicleName = c(vehicle1[1]),
+  vehicleCapacity = c(vehicle1[2]),
+  vehicleSpeed = c(vehicle1[3]),
+  vehicleStopTime = c(vehicle1[4]),
+  facilityName = c(facility1[1]),
+  facilityHandlingTime = c(facility1[2]),
+  #facilityLatitude = c(facilityFirstLeg[3],facilitySecontLeg[3]),
+  #facilityLongitude = c(facilityFirstLeg[4],facilitySecontLeg[4]),
+  totalDistance = c(solution[1]),
+  totalTime = c(solution[2]),
+  m = c(solution[3])
 )
 
-#write.csv2(dfSolution,"./Madrid_Centro/testOutputASIS.csv",sep =";", row.names = FALSE, dec=".")
-write.table(dfSolution, file_ouptut_ASIS, sep =";", dec=".", row.names=FALSE)
+# write.csv2(df_solution, "./Madrid_Centro/testOutputASIS.csv", sep =";",
+#            row.names = FALSE, dec = ".")
+write.table(df_solution, file_output_asis, sep = ";", dec = ".",
+            row.names = FALSE)
 
-print("Terminado AS IS")
+print.data.frame(df_solution)
+sprintf("Model execution completed [%.3fs]", Sys.time() - start_time)
