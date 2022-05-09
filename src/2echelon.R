@@ -1,11 +1,10 @@
-#' Script for executing Madrid scenarios
+#' Echelon main
 #'
-#' Rscript <dir>/scenarioASIS_Madrid.R U:/20211027ZLC/INPUT/config.csv
-#'                                    U:/20211027ZLC/INPUT/services.csv
-#'                                    U:/20211027ZLC/INPUT/facilitiesASIS.csv
-#'                                    U:/20211027ZLC/INPUT/vehiclesASIS.csv
-#'                                    U:/20211027ZLC
-
+#' Rscript <path-to-main>/2echelon.R <path-to-config-csv>
+#'                                    <path-to-services-csv>
+#'                                    <path-to-facilities-csv>
+#'                                    <path-to-vehicles-csv>
+#'
 library("argparse")
 
 #' Obtain a zip file from open source url
@@ -48,7 +47,7 @@ file_config <- args$config
 file_services <- args$services
 file_facilities_asis <- args$facilities
 file_vehicles_asis <- args$vehicles
-out_dir <- args$out
+out_dir <- args$outdir
 file_output_asis <- file.path(out_dir, args$out_filename)
 
 str_url <- args$shapefile
