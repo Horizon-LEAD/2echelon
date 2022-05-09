@@ -35,12 +35,11 @@
             	"key": "4",
             	"type": "echelon_input_facilitiesASIS_file",
             	"src": "PATH/2ECHELON/INPUT/facilitiesASIS.csv"
-            }
+            },
             {
             	"key": "5",
             	"type": "echelon_input_vehiclesASIS_file",
             	"src": "PATH/2ECHELON/INPUT/vehiclesASIS.csv"
-            
             }
         ],
         "output-data": [
