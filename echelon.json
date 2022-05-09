@@ -8,7 +8,7 @@
         "description":"Analytical model"
     }],
     "dockerImage":"lead-echelon:latest",
-    "url": "github.com",
+    "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
         {
             "name": "config",
@@ -19,9 +19,10 @@
             "inputType": "CLI",
             "chartType": "NONE",
             "modelDataType": {
-                "name": "string",
+                "name": "file",
                 "description": "",
-                "dataType": "string",
+                "dataType": "file",
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -42,9 +43,10 @@
             "inputType": "CLI",
             "chartType": "NONE",
             "modelDataType": {
-                "name": "string",
+                "name": "file",
                 "description": "",
-                "dataType": "string",
+                "dataType": "file",
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -65,9 +67,10 @@
             "inputType": "CLI",
             "chartType": "NONE",
             "modelDataType": {
-                "name": "string",
+                "name": "file",
                 "description": "",
-                "dataType": "string",
+                "dataType": "file",
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -88,9 +91,10 @@
             "inputType": "CLI",
             "chartType": "NONE",
             "modelDataType": {
-                "name": "string",
+                "name": "file",
                 "description": "",
-                "dataType": "string",
+                "dataType": "file",
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -114,6 +118,7 @@
                 "name": "string",
                 "description": "",
                 "dataType": "string",
+                "extension": null,
                 "validators": [
                     {
                         "name": "required",
