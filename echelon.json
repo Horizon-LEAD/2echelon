@@ -1,0 +1,129 @@
+{
+    "name": "echelon",
+    "description":"Echelon calculates...",
+    "version": "0.0.1",
+    "status":"draft",
+    "types": [{
+        "name": "ANALYTICAL",
+        "description":"Analytical model"
+    }],
+    "dockerImage":"lead-echelon:latest",
+    "url": "github.com",
+    "modelData":  [
+        {
+            "name": "config",
+            "variableName": "CONFIG",
+            "description": "Configuration parameters",
+            "isOutput": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "services",
+            "variableName": "SERVICES",
+            "description": "Services data",
+            "isOutput": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "facilities",
+            "variableName": "FACILITIES",
+            "description": "Facilities data",
+            "isOutput": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "vehicles",
+            "variableName": "VEHICLES",
+            "description": "Vehicles data",
+            "isOutput": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "output-directory",
+            "variableName": "OUTDIR",
+            "description": "Output directory",
+            "isOutput": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        }
+    ]
+}
