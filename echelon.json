@@ -3,10 +3,9 @@
     "description":"Echelon calculates...",
     "version": "0.0.1",
     "status":"draft",
-    "types": [{
-        "name": "ANALYTICAL",
-        "description":"Analytical model"
-    }],
+    "types": [
+        {"name": "ANALYTICAL", "description":"Analytical model"}
+    ],
     "dockerImage":"lead-echelon:latest",
     "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
@@ -15,6 +14,7 @@
             "variableName": "CONFIG",
             "description": "Configuration parameters",
             "isOutput": false,
+            "isOutputDir": false,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
@@ -39,6 +39,7 @@
             "variableName": "SERVICES",
             "description": "Services data",
             "isOutput": false,
+            "isOutputDir": false,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
@@ -63,6 +64,7 @@
             "variableName": "FACILITIES",
             "description": "Facilities data",
             "isOutput": false,
+            "isOutputDir": false,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
@@ -87,6 +89,7 @@
             "variableName": "VEHICLES",
             "description": "Vehicles data",
             "isOutput": false,
+            "isOutputDir": false,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
@@ -111,6 +114,7 @@
             "variableName": "OUTDIR",
             "description": "Output directory",
             "isOutput": false,
+            "isOutputDir": true,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
@@ -129,6 +133,113 @@
                 ],
                 "objectKeys": []
             }
+        },
+        {
+            "name": "results",
+            "variableName": "output",
+            "description": "Results",
+            "isOutput": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "csv",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            },
+            "fromRow": null,
+            "toRow": null,
+            "column": null,
+            "refModelData": null,
+            "jsonPath": null,
+            "sheet": null,
+            "delimiter": ";",
+            "qualifier": "\"",
+            "dateFormat": null
+        },
+        {
+            "name": "totalDistance",
+            "variableName": "totalDistance",
+            "description": "The total distance traveled",
+            "isOutput": true,
+            "isVirtual": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "number",
+                "description": "",
+                "dataType": "file",
+                "validators": [],
+                "objectKeys": []
+            },
+            "fromRow": 0,
+            "toRow": 0,
+            "column": "totalDistance",
+            "refModelData": 6,
+            "jsonPath": null,
+            "sheet": null,
+            "delimeter": null,
+            "qualifier": null,
+            "dateFormat": null
+        },
+        {
+            "name": "totalTime",
+            "variableName": "totalTime",
+            "description": "The total time traveled",
+            "isOutput": true,
+            "isVirtual": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "number",
+                "description": "",
+                "dataType": "file",
+                "validators": [],
+                "objectKeys": []
+            },
+            "fromRow": 0,
+            "toRow": 0,
+            "column": "totalTime",
+            "refModelData": 6,
+            "jsonPath": null,
+            "sheet": null,
+            "delimeter": null,
+            "qualifier": null,
+            "dateFormat": null
+        },
+        {
+            "name": "numberOfVehicles",
+            "variableName": "numberOfVehicles",
+            "description": "The number of vehicles needed",
+            "isOutput": true,
+            "isVirtual": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "number",
+                "description": "",
+                "dataType": "file",
+                "validators": [],
+                "objectKeys": []
+            },
+            "fromRow": 0,
+            "toRow": 0,
+            "column": "numberOfVehicles",
+            "refModelData": 6,
+            "jsonPath": null,
+            "sheet": null,
+            "delimeter": null,
+            "qualifier": null,
+            "dateFormat": null
         }
     ]
 }

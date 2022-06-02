@@ -166,7 +166,7 @@ df_solution <- data.frame(
   #facilityLongitude = c(facilityFirstLeg[4],facilitySecontLeg[4]),
   totalDistance = c(solution[1]),
   totalTime = c(solution[2]),
-  m = c(solution[3])
+  numberOfVehicles = c(solution[3])
 )
 
 # write.csv2(df_solution, "./Madrid_Centro/testOutputASIS.csv", sep =";",
