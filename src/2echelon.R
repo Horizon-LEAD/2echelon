@@ -1,19 +1,21 @@
 #' Echelon main
 #'
 #' Rscript <path-to-main>/2echelon.R <path-to-config-csv>
-#'                                    <path-to-services-csv>
-#'                                    <path-to-facilities-csv>
-#'                                    <path-to-vehicles-csv>
+#'                                   <path-to-services-csv>
+#'                                   <path-to-facilities-csv>
+#'                                   <path-to-vehicles-csv>
+#'                                   <path-to-area-shp>
+#'                                   <path-for-output>
+#'                                   --out-filename <out-filename (output.csv)>
 #'
 library("argparse")
+library("tools")
 
-#' Obtain a zip file from open source url
+
 #' Unzip file to given directory
-download_unzip <- function(str_url, file_dir) {
-  download.file(url = str_url, destfile = paste(file_dir, "/data.zip",
-                sep = ""))
-  unzip(zipfile = paste(file_dir, "/data.zip", sep = ""), overwrite = T,
-        exdir = paste(file_dir, "/", sep = ""))
+unzip_area <- function(zip_path) {
+  unzip(zipfile = zip_path, overwrite = T,
+        exdir = dirname(zip_path))
 }
 
 
@@ -27,16 +29,10 @@ parser$add_argument("facilities", type = "character",
                     help = "Facilities file")
 parser$add_argument("vehicles", type = "character",
                     help = "Vehicles file")
+parser$add_argument("area", type = "character",
+                    help = "The area as a zip file with the .shp, .shx files")
 parser$add_argument("outdir", type = "character",
                     help = "Output directory")
-parser$add_argument("--shapefile", type = "character",
-                    default = paste("https://datos.madrid.es/egob/catalogo/",
-                                    "300229-0-trafico-madrid-central.zip",
-                                    sep = ""),
-                    help = "URL for shapefile ZIP")
-parser$add_argument("--shapefile-name", type = "character",
-                    default = "Madrid_Central.shp",
-                    help = "Name of the file to be used from ZIP")
 parser$add_argument("--out-filename", type = "character",
                     default = "output.csv",
                     help = "Name of the output file")
@@ -47,11 +43,12 @@ file_config <- args$config
 file_services <- args$services
 file_facilities_asis <- args$facilities
 file_vehicles_asis <- args$vehicles
+
+unzip_area(args$area)
+file_area <- paste(file_path_sans_ext(args$area), ".shp", sep = "")
+
 out_dir <- args$outdir
 file_output_asis <- file.path(out_dir, args$out_filename)
-
-str_url <- args$shapefile
-str_file_name <- file.path(out_dir, args$shapefile_name)
 
 # find directory of the script and source deps
 cli_args <- commandArgs(trailingOnly = FALSE)
@@ -60,9 +57,6 @@ script_dirname <- dirname(script_name)
 
 source(file.path(script_dirname, "Shapefile_to_Zone.R"))
 source(file.path(script_dirname, "TwoEchelonModel_script.R"))
-
-#read geographic data od the delivery area
-download_unzip(str_url, out_dir)
 
 start_time <- Sys.time()
 #------------------------------------------------------------------------------
@@ -129,8 +123,8 @@ fd_services <- read.csv(file_services, header = F, ";")
 zone_avg_order_size <- mean(fd_services$V20)
 zone_no_orders <- nrow(fd_services)
 zone_aggregated_orders_size <- sum(fd_services$V20)
-zone_area <- read_area(str_file_name) / 1000000
-zone_centroid <- read_centroid(str_file_name)
+zone_area <- read_area(file_area) / 1000000
+zone_centroid <- read_centroid(file_area)
 zone_centroid_geometry <- st_geometry(zone_centroid)
 zone_coordinates_centroid <- st_coordinates(zone_centroid_geometry)
 zone_centroid_x <- zone_coordinates_centroid[2]
