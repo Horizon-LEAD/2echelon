@@ -1,18 +1,18 @@
 {
     "name": "echelon",
-    "description":"Echelon calculates...",
+    "description":"2-Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration.",
     "version": "0.0.1",
     "status":"draft",
     "types": [
-        {"name": "ANALYTICAL", "description":"Analytical model"}
+        {"name": "Network Model", "description":"Network models deal with routing and allocation to road networks."}
     ],
-    "dockerImage":"lead-echelon:latest",
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:latest",
     "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
         {
-            "name": "config",
+            "name": "Configuration File",
             "variableName": "CONFIG",
-            "description": "Configuration parameters",
+            "description": "A config.csv file contains the configuration for the execution of the Echelon model. ",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -35,9 +35,9 @@
             }
         },
         {
-            "name": "services",
+            "name": "Service File",
             "variableName": "SERVICES",
-            "description": "Services data",
+            "description": "A services.csv file lists all the deliveries to be served.",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -60,9 +60,9 @@
             }
         },
         {
-            "name": "facilities",
+            "name": "Facilities File",
             "variableName": "FACILITIES",
-            "description": "Facilities data",
+            "description": "A facilities.csv file contains the details of the facilities.",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -85,9 +85,9 @@
             }
         },
         {
-            "name": "vehicles",
+            "name": "Vehicle File",
             "variableName": "VEHICLES",
-            "description": "Vehicles data",
+            "description": "A vehicles.csv file contains the details of the available vehicles.",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -167,9 +167,9 @@
             "dateFormat": null
         },
         {
-            "name": "totalDistance",
+            "name": "Total Delivery Distance",
             "variableName": "totalDistance",
-            "description": "The total distance traveled",
+            "description": "The total distance in km travelled by tthe fleet of vehicles' fleet for the total number of deliveries.",
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
@@ -192,9 +192,9 @@
             "dateFormat": null
         },
         {
-            "name": "totalTime",
+            "name": "Total Delivery Time",
             "variableName": "totalTime",
-            "description": "The total time traveled",
+            "description": "The total time in hours travelled by the vehicles' fleet for the total number of deliveries.",
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
@@ -217,9 +217,9 @@
             "dateFormat": null
         },
         {
-            "name": "numberOfVehicles",
+            "name": "Number of Vehicles Needed",
             "variableName": "numberOfVehicles",
-            "description": "The number of vehicles needed",
+            "description": "The number of vehicles needed to deliver the demanded orders.",
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
