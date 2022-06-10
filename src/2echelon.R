@@ -30,7 +30,7 @@ parser$add_argument("facilities", type = "character",
 parser$add_argument("vehicles", type = "character",
                     help = "Vehicles file")
 parser$add_argument("area", type = "character",
-                    help = "The area as a zip file with the .shp, .shx files")
+                    help = "The area as a csv file")
 parser$add_argument("outdir", type = "character",
                     help = "Output directory")
 parser$add_argument("--out-filename", type = "character",
@@ -43,10 +43,7 @@ file_config <- args$config
 file_services <- args$services
 file_facilities_asis <- args$facilities
 file_vehicles_asis <- args$vehicles
-
-unzip_area(args$area)
-file_area <- paste(file_path_sans_ext(args$area), ".shp", sep = "")
-
+file_area <- args$area
 out_dir <- args$outdir
 file_output_asis <- file.path(out_dir, args$out_filename)
 
@@ -123,12 +120,11 @@ fd_services <- read.csv(file_services, header = F, ";")
 zone_avg_order_size <- mean(fd_services$V20)
 zone_no_orders <- nrow(fd_services)
 zone_aggregated_orders_size <- sum(fd_services$V20)
-zone_area <- read_area(file_area) / 1000000
-zone_centroid <- read_centroid(file_area)
-zone_centroid_geometry <- st_geometry(zone_centroid)
-zone_coordinates_centroid <- st_coordinates(zone_centroid_geometry)
-zone_centroid_x <- zone_coordinates_centroid[2]
-zone_centroid_y <- zone_coordinates_centroid[1]
+z <- read.csv(file_area, header = F, ",")
+area <- as.matrix(z, nrow = 2, ncol = 3, byrow = TRUE)
+zone_area <- as.numeric(area[2, 1]) / 1000000
+zone_centroid_x <- as.numeric(area[2, 2])
+zone_centroid_y <- as.numeric(area[2, 3])
 # create the zone for echelon 1:
 # - 1 delivery point (UCC) from the branch with agregated orders
 zone1 <- c(1, zone_avg_order_size, zone_area,
