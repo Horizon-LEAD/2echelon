@@ -110,6 +110,31 @@
             }
         },
         {
+            "name": "Area File",
+            "variableName": "area",
+            "description": "A area.csv file contains geographical information about the delivery zone that the services are located.",
+            "isOutput": false,
+            "isOutputDir": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "csv",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
             "name": "output-directory",
             "variableName": "OUTDIR",
             "description": "Output directory",
