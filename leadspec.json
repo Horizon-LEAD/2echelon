@@ -1,12 +1,12 @@
 {
-    "name": "echelon",
-    "description":"2-Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration.",
-    "version": "0.0.1",
+    "name": "Echelon",
+    "description":"2-Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration. Version 2 of the model accepts the area as a CSV file.",
+    "version": "2.0.0",
     "status":"draft",
     "types": [
         {"name": "Network Model", "description":"Network models deal with routing and allocation to road networks."}
     ],
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:latest",
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:latest-csv",
     "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
         {
@@ -111,7 +111,7 @@
         },
         {
             "name": "Area File",
-            "variableName": "area",
+            "variableName": "AREA",
             "description": "A area.csv file contains geographical information about the delivery zone that the services are located.",
             "isOutput": false,
             "isOutputDir": false,
@@ -160,9 +160,9 @@
             }
         },
         {
-            "name": "results",
+            "name": "CSV output file",
             "variableName": "output",
-            "description": "Results",
+            "description": "Calculates the simulation outcome and writes it in a CSV file.",
             "isOutput": true,
             "isOptional": false,
             "chartType": "NONE",
@@ -198,18 +198,18 @@
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
-            "chartType": "NONE",
+            "chartType": "LINE",
             "modelDataType": {
                 "name": "number",
                 "description": "",
-                "dataType": "file",
+                "dataType": "number",
                 "validators": [],
                 "objectKeys": []
             },
             "fromRow": 0,
             "toRow": 0,
             "column": "totalDistance",
-            "refModelData": 6,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
@@ -223,18 +223,18 @@
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
-            "chartType": "NONE",
+            "chartType": "LINE",
             "modelDataType": {
                 "name": "number",
                 "description": "",
-                "dataType": "file",
+                "dataType": "number",
                 "validators": [],
                 "objectKeys": []
             },
             "fromRow": 0,
             "toRow": 0,
             "column": "totalTime",
-            "refModelData": 6,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
@@ -248,18 +248,18 @@
             "isOutput": true,
             "isVirtual": true,
             "isOptional": false,
-            "chartType": "NONE",
+            "chartType": "BAR",
             "modelDataType": {
                 "name": "number",
                 "description": "",
-                "dataType": "file",
+                "dataType": "number",
                 "validators": [],
                 "objectKeys": []
             },
             "fromRow": 0,
             "toRow": 0,
             "column": "numberOfVehicles",
-            "refModelData": 6,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
