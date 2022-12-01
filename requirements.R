@@ -1,5 +1,5 @@
 install.packages(
-    c("sp", "sf", "raster", "dplyr", "spDataLarge",
+    c("argparse", "sp", "sf", "raster", "dplyr", "spDataLarge",
       "spData", "ggmap", "geojsonio", "xlsx",
       "rJava", "xlsxjars", "geosphere"),
     repos = c("https://cloud.r-project.org",

@@ -45,9 +45,9 @@ calculateSolutionTwoLegs <- function(zone1, vehicle1, facility1, zone2,
 
 #' Calculate the number of vehicles and resources to deliver in a specific
 #' delivery zone from the hub within the delivery area to the delivery points
-calculateSolutionLeg <- function(zone, vehicle, facility, config) {
+calculateSolutionLeg <- function(zone, vehicle, facility, config, distance_type) {
   # distance if only 1 vehicle
-  initial_distance <- calculateTotalDistance(zone, facility, 1, config)
+  initial_distance <- calculateTotalDistance(zone, facility, 1, config, distance_type)
 
   # number of resources considering capacity constraint
   m1 <- calculateM1(vehicle, zone)
@@ -57,7 +57,7 @@ calculateSolutionLeg <- function(zone, vehicle, facility, config) {
 
   m <- max(m1, m2) # the number of resources is the max required
   # total distance with the m vehicles
-  total_distance <- calculateTotalDistance(zone, facility, m, config)
+  total_distance <- calculateTotalDistance(zone, facility, m, config, distance_type)
   total_time <- calculateTotalTime(total_distance, vehicle, zone)
 
   # solution = list(vehicle, zone, facility, config, totalDistance,
@@ -74,21 +74,16 @@ calculateSolutionLeg <- function(zone, vehicle, facility, config) {
 #' zone = name, delivery size (number of boxes), area (m2), latitude,
 #'                             longitude, number of delivery points
 #' facility = name, handling time, latitude, longitude
-calculateTotalDistanceDirectShipment <- function(zone, facility, m) {
-  # db_dhi = calculateEuclideanDistance(zone[4], zone[5], facility[3],
-  #                                     facility[4])
-  # db_dhi = calculateGeodesicDistance(zone[4], zone[5], facility[3],
-  #                                    facility[4])
-
-    if (distance_type == 1) {
-      print("1")
-      db_dhi <- calculateEuclideanDistance(zone[4], zone[5], facility[3],
+calculateTotalDistanceDirectShipment <- function(zone, facility, m, distance_type = 1) {
+  if (distance_type == 1) {
+    print("1")
+    db_dhi <- calculateEuclideanDistance(zone[4], zone[5], facility[3],
                                           facility[4])
-    } else {
-      print("2")
-      db_dhi <- calculateGeodesicDistance(zone[4], zone[5], facility[3],
-                                         facility[4])
-    }
+  } else {
+    print("2")
+    db_dhi <- calculateGeodesicDistance(zone[4], zone[5], facility[3],
+                                        facility[4])
+  }
 
   # roundtrip distance
   db_dhi <- db_dhi * 2 * m
@@ -139,8 +134,8 @@ calculatelDistanceDistributionArea <- function(k, zone) {
 #' zone = name, delivery size (number of boxes), area (m2), latitude, longitude,
 #'        number of delivery points
 #' facility = (name, handling time, latitude, longitude)
-calculateTotalDistance <- function(zone, facility, m, config) {
-  db_dhi <- calculateTotalDistanceDirectShipment(zone, facility, m)
+calculateTotalDistance <- function(zone, facility, m, config, distance_type) {
+  db_dhi <- calculateTotalDistanceDirectShipment(zone, facility, m, distance_type)
   db_dhi <- db_dhi + calculatelDistanceDistributionArea(config[2], zone)
 
   return(db_dhi)

@@ -7,12 +7,24 @@ Echelon model for the LEAD platform
 In the following the basics of the `2echelon` model are presented.
 That includes descriptions of the input and source files, together with guidelines on using the scripts.
 
-<!-- 
+## Environment preparation
+
+```
+conda create -n r-echelon r-base=4.2.0 r-essentials
+conda activate r-echelon
+conda install -c conda-forge r-sp r-sf
+conda install -c conda-forge r-raster r-dplyr r-spData r-ggmap r-geojsonio r-geosphere
+conda install -c conda-forge r-xlsx r-xlsxjars r-rJava
+$ R
+> install.packages(c("spDataLarge"), repos = c("https://cloud.r-project.org", "https://nowosad.github.io/drat/"))
+```
+
+<!--
 --------------------------------------------------------------------------------------------------
 ROOT FOLDER
 -------------------------------------------------------------------------------------------------
 --Shapefile_to_Zone.r: functions for reading geographic data.
---TwoEchelonModel_script.r: functions for calculating the number of vehicles, distance and times 
+--TwoEchelonModel_script.r: functions for calculating the number of vehicles, distance and times
 for delivering for one leg (ASIS) and two legs (TOBE) scenarios.
 --scenarioASIS_Madrid.r: script for executing the scenario asis and writing the results in a specific document.
 The information required is in the INPUT folder and the output will be saved in the OUTPUT folder.
