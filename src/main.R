@@ -24,14 +24,10 @@ parser$add_argument("area", type = "character",
                     help = "The area as a zip file with shapefile data")
 parser$add_argument("outdir", type = "character",
                     help = "Output directory")
-parser$add_argument("--out-filename", type = "character",
-                    default = "output.csv",
-                    help = "Name of the output file")
 
 cli_args <- commandArgs(trailingOnly = FALSE)
 print(cli_args)
 args <- parser$parse_args()
-print(args)
 
 # find directory of the script and source deps
 script_name <- sub("--file=", "", cli_args[grep("--file=", cli_args)])
@@ -39,11 +35,9 @@ script_dirname <- dirname(script_name)
 
 source(file.path(script_dirname, "echelon.R"))
 
-echelon(
-    args$config,
-    args$services,
-    args$facilities,
-    args$vehicles,
-    args$area,
-    args$outdir
-)
+echelon(args$config,
+        args$services,
+        args$facilities,
+        args$vehicles,
+        args$area,
+        args$outdir)

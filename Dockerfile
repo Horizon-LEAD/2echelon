@@ -17,4 +17,4 @@ RUN R -e 'install.packages( \
 
 COPY src/* /app/
 
-ENTRYPOINT [ "Rscript", "/app/2echelon.R" ]
+ENTRYPOINT [ "Rscript", "/app/main.R" ]
