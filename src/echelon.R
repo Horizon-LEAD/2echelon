@@ -1,7 +1,7 @@
 library("tools")
 
-source(file.path(script_dirname, "Shapefile_to_Zone.R"))
-source(file.path(script_dirname, "TwoEchelonModel_script.R"))
+source(file.path(script_dirname, "zone.R"))
+source(file.path(script_dirname, "calc.R"))
 
 #' Unzip file to given directory
 unzip_area <- function(zip_path) {
@@ -84,13 +84,12 @@ echelon <- function(file_config, file_services, file_facilities,
     #-------------------------------------------------------------------------
     # Area
     if (areacsv == TRUE) {
-        z <- read.csv(file_area, header = FALSE, ",")
+        z <- read.csv(file_area, header = FALSE, ";")
         area <- as.matrix(z, nrow = 2, ncol = 3, byrow = TRUE)
         zone_area <- as.numeric(area[2, 1]) / 1000000
         zone_centroid_x <- as.numeric(area[2, 2])
         zone_centroid_y <- as.numeric(area[2, 3])
     } else {
-        print("*** TEST2 ***")
         unzip_area(file_area)
         file_area_shp <- paste(tools::file_path_sans_ext(file_area), ".shp", sep = "")
         zone_area <- read_area(file_area_shp) / 1000000

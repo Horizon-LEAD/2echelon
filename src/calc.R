@@ -76,11 +76,9 @@ calculateSolutionLeg <- function(zone, vehicle, facility, config, distance_type)
 #' facility = name, handling time, latitude, longitude
 calculateTotalDistanceDirectShipment <- function(zone, facility, m, distance_type = 1) {
   if (distance_type == 1) {
-    print("1")
     db_dhi <- calculateEuclideanDistance(zone[4], zone[5], facility[3],
                                           facility[4])
   } else {
-    print("2")
     db_dhi <- calculateGeodesicDistance(zone[4], zone[5], facility[3],
                                         facility[4])
   }

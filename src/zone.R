@@ -14,6 +14,9 @@ library(ggmap)
 library(geojsonio)
 
 
+#' Downloads data from URL and stores them as shapefile.zip
+#'
+#' once the file is downloaded, it unzips its contents
 read_geodata_url <- function(str_url, file_dir) {
   download.file(url = str_url,
                 destfile = paste(file_dir, "/shapefile.zip", sep = ""))
@@ -27,20 +30,11 @@ read_geodata_url <- function(str_url, file_dir) {
 #' once the file is downloaded or available, reads the shapefile str_file_name
 #' that contains georgaphic information of the delivery area and returns the
 #' area size in square metres.
-#'
-#' list.of.packages <- c("sp", "sf", "raster", "dplyr", "spData")
-#'  new.packages <- list.of.packages[
-#'    !(list.of.packages %in% installed.packages()[,"Package"])
-#'  ]
-#'  if(length(new.packages)) install.packages(new.packages)
 read_area <- function(str_file_name) {
   zone <- sf::st_read(dsn = str_file_name)
-  print(class(zone))
   zone <- sf::st_transform(zone, crs = 4326)
   # csr <- sf::st_crs(zone)
-
   area <- sf::st_area(sf::st_polygonize(zone))
-  print(area)
 
   return(area)
 }
@@ -49,13 +43,6 @@ read_area <- function(str_file_name) {
 #'
 #' As input a shapefile with geographic information of the delivery area is
 #' given. Returns the centroid of the area'
-#'
-#' list.of.packages <- c("sp", "sf", "raster", "dplyr", "spData",
-#'                        "ggplot2", "ggmap")
-#'  new.packages <- list.of.packages[
-#'    !(list.of.packages %in% installed.packages()[, "Package"])
-#'  ]
-#'  if (length(new.packages)) install.packages(new.packages)
 read_centroid <- function(str_file_name) {
   zone <- sf::st_read(dsn = str_file_name)
   zone <- sf::st_transform(zone, crs = 4326)
@@ -65,15 +52,7 @@ read_centroid <- function(str_file_name) {
   return(centroid)
 }
 
-
 #' Reads geojson data for Lyon
-#'
-#' list.of.packages <- c("sp", "sf", "raster", "dplyr", "spData",
-#'                        "ggplot2", "ggmap", "geojsonio")
-#'  new.packages <- list.of.packages[
-#'    !(list.of.packages %in% installed.packages()[, "Package"])
-#'  ]
-#'  if (length(new.packages)) install.packages(new.packages)
 read_zone_lyon <- function() {
   # file <- system.file("examples", "california.geojson",
   #                     package = "geojsonio")
@@ -95,13 +74,6 @@ read_zone_lyon <- function() {
 }
 
 #' Reads facilities for Lyon based on geojson data
-#'
-#' list.of.packages <- c("sp", "sf", "raster", "dplyr", "spData",
-#'                        "ggplot2", "ggmap", "geojsonio")
-#'  new.packages <- list.of.packages[
-#'    !(list.of.packages %in% installed.packages()[, "Package"])
-#'  ]
-#'  if (length(new.packages)) install.packages(new.packages)
 read_facilities_lyon <- function() {
   # file <- system.file("examples", "california.geojson",
   #                     package = "geojsonio")
@@ -117,22 +89,13 @@ read_facilities_lyon <- function() {
 }
 
 #' Reads Lyon's demand based on geojson data
-#'
-#' list.of.packages <- c("sp", "sf", "raster", "dplyr", "spData",
-#'                        "ggplot2", "ggmap", "geojsonio")
-#'  new.packages <- list.of.packages[
-#'    !(list.of.packages %in% installed.packages()[, "Package"])
-#'  ]
-#'  if (length(new.packages)) install.packages(new.packages)
 read_demand_lyon <- function() {
   # file <- system.file("examples", "california.geojson",
   #                     package = "geojsonio")
-  # print(a)
 
   s <- geojsonio::geojson_read("Lyon/demand.geojson", what = "sp", parse = TRUE)
 
   demand <- sf::st_as_sf(s)
-  print(demand)
   plot(demand, add = TRUE)
 
   return(demand)
