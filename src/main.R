@@ -4,7 +4,7 @@
 #'                               <path-to-services-csv>
 #'                               <path-to-facilities-csv>
 #'                               <path-to-vehicles-csv>
-#'                               <path-to-area-zip>
+#'                               <path-to-zones-csv>
 #'                               <path-for-output>
 #'
 library("argparse")
@@ -19,11 +19,10 @@ parser$add_argument("facilities", type = "character",
                     help = "Facilities file")
 parser$add_argument("vehicles", type = "character",
                     help = "Vehicles file")
-parser$add_argument("area", type = "character",
-                    help = "The area as a zip file with shapefile data")
+parser$add_argument("zones", type = "character",
+                    help = "The zones as a csv file")
 parser$add_argument("outdir", type = "character",
                     help = "Output directory")
-parser$add_argument('--areacsv', action='store_true')
 
 cli_args <- commandArgs(trailingOnly = FALSE)
 print(cli_args)
@@ -39,6 +38,5 @@ echelon(args$config,
         args$services,
         args$facilities,
         args$vehicles,
-        args$area,
-        args$areacsv,
+        args$zones,
         args$outdir)

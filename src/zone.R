@@ -62,10 +62,7 @@ read_zone_lyon <- function() {
 
   r <- sf::st_as_sf(p)
   area <- sf::st_area(r)
-  print(area)
-
   centroid_lyon <- sf::st_centroid(r)
-  print(centroid_lyon)
 
   plot(sf::st_geometry(r), col = "white", border = "grey", axes = TRUE)
   plot(sf::st_geometry(sf::st_centroid(r)), pch = 3, col = "red", add = TRUE)
@@ -82,7 +79,6 @@ read_facilities_lyon <- function() {
                                what = "sp", parse = TRUE)
 
   r <- sf::st_as_sf(p)
-  print(r)
   plot(r, pch = 2, col = "red", axes = TRUE)
 
   return(r)
