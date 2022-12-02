@@ -1,12 +1,12 @@
 {
     "name": "Echelon",
-    "description":"2-Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration. Version 1 of the model accepts the area as a zip file with a shapefile and meta objects.",
-    "version": "1.0.1",
+    "description":"Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration. Version 1 of the model accepts the area as a zip file with a shapefile and meta objects.",
+    "version": "v1",
     "status":"draft",
     "types": [
         {"name": "Network Model", "description":"Network models deal with routing and allocation to road networks."}
     ],
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:latest",
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:v1",
     "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
         {
