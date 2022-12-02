@@ -17,4 +17,4 @@ RUN R -e 'install.packages( \
 
 COPY src/* /app/
 
-ENTRYPOINT [ "Rscript", "/app/main.R" ]
+ENTRYPOINT [ "Rscript", "/app/main.R", "--areacsv" ]
