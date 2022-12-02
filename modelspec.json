@@ -1,12 +1,12 @@
 {
     "name": "Echelon",
     "description":"Echelon model estimates the resources needed (vehicles, drivers), total distance, delivery time per type of vehicle for 1-echelon or 2-echelon network configuration. Version 1 of the model accepts the area as a zip file with a shapefile and meta objects.",
-    "version": "v1",
+    "version": "v1-csv",
     "status":"draft",
     "types": [
         {"name": "Network Model", "description":"Network models deal with routing and allocation to road networks."}
     ],
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:v1",
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon:v1-csv",
     "url": "https://github.com/Horizon-LEAD/2echelon",
     "modelData":  [
         {
@@ -112,7 +112,7 @@
         {
             "name": "Area File",
             "variableName": "AREA",
-            "description": "A area.zip file containing .shp, .shx geographical information files about the delivery zone that the services are located.",
+            "description": "A area.csv file contains geographical information about the delivery zone that the services are located.",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -122,7 +122,7 @@
                 "name": "file",
                 "description": "",
                 "dataType": "file",
-                "extension": "zip",
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -209,7 +209,7 @@
             "fromRow": 0,
             "toRow": 0,
             "column": "totalDistance",
-            "refModelData": 7,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
@@ -234,7 +234,7 @@
             "fromRow": 0,
             "toRow": 0,
             "column": "totalTime",
-            "refModelData": 7,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
@@ -259,7 +259,7 @@
             "fromRow": 0,
             "toRow": 0,
             "column": "numberOfVehicles",
-            "refModelData": 7,
+            "refModelData": 17,
             "jsonPath": null,
             "sheet": null,
             "delimeter": null,
