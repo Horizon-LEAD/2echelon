@@ -14,6 +14,14 @@ library(ggmap)
 library(geojsonio)
 
 
+read_geodata_url <- function(str_url, file_dir) {
+  download.file(url = str_url,
+                destfile = paste(file_dir, "/shapefile.zip", sep = ""))
+  unzip(zipfile = paste(file_dir, "/shapefile.zip", sep = ""),
+        overwrite = TRUE,
+        exdir = file_dir)
+}
+
 #' Reads area from shape file
 #'
 #' once the file is downloaded or available, reads the shapefile str_file_name

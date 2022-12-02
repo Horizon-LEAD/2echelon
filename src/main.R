@@ -4,9 +4,8 @@
 #'                               <path-to-services-csv>
 #'                               <path-to-facilities-csv>
 #'                               <path-to-vehicles-csv>
-#'                               <path-to-area-shp>
+#'                               <path-to-area-zip>
 #'                               <path-for-output>
-#'                               --out-filename <out-filename (output.csv)>
 #'
 library("argparse")
 
