@@ -23,6 +23,7 @@ parser$add_argument("area", type = "character",
                     help = "The area as a zip file with shapefile data")
 parser$add_argument("outdir", type = "character",
                     help = "Output directory")
+parser$add_argument('--areacsv', action='store_true')
 
 cli_args <- commandArgs(trailingOnly = FALSE)
 print(cli_args)
@@ -39,4 +40,5 @@ echelon(args$config,
         args$facilities,
         args$vehicles,
         args$area,
+        args$areacsv,
         args$outdir)

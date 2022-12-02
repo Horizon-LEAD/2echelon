@@ -10,9 +10,7 @@ unzip_area <- function(zip_path) {
 }
 
 echelon <- function(file_config, file_services, file_facilities,
-                    file_vehicles, area, out_dir) {
-    unzip_area(area)
-    file_area <- paste(tools::file_path_sans_ext(area), ".shp", sep = "")
+                    file_vehicles, file_area, areacsv, out_dir) {
 
     output_fname <- file.path(out_dir, "output.csv")
 
@@ -82,17 +80,31 @@ echelon <- function(file_config, file_services, file_facilities,
     zone_avg_order_size <- mean(fd_services$V20)
     zone_no_orders <- nrow(fd_services)
     zone_aggregated_orders_size <- sum(fd_services$V20)
-    zone_area <- read_area(file_area) / 1000000
-    zone_centroid <- read_centroid(file_area)
-    zone_centroid_geometry <- st_geometry(zone_centroid)
-    zone_coordinates_centroid <- st_coordinates(zone_centroid_geometry)
-    zone_centroid_x <- zone_coordinates_centroid[2]
-    zone_centroid_y <- zone_coordinates_centroid[1]
+
+    #-------------------------------------------------------------------------
+    # Area
+    if (areacsv == TRUE) {
+        z <- read.csv(file_area, header = FALSE, ",")
+        area <- as.matrix(z, nrow = 2, ncol = 3, byrow = TRUE)
+        zone_area <- as.numeric(area[2, 1]) / 1000000
+        zone_centroid_x <- as.numeric(area[2, 2])
+        zone_centroid_y <- as.numeric(area[2, 3])
+    } else {
+        print("*** TEST2 ***")
+        unzip_area(file_area)
+        file_area_shp <- paste(tools::file_path_sans_ext(file_area), ".shp", sep = "")
+        zone_area <- read_area(file_area_shp) / 1000000
+        zone_centroid <- read_centroid(file_area_shp)
+        zone_centroid_geometry <- st_geometry(zone_centroid)
+        zone_coordinates_centroid <- st_coordinates(zone_centroid_geometry)
+        zone_centroid_x <- zone_coordinates_centroid[2]
+        zone_centroid_y <- zone_coordinates_centroid[1]
+    }
     # create the zone for echelon 1:
     # - 1 delivery point (UCC) from the branch with agregated orders
     zone1 <- c(1, zone_avg_order_size, zone_area,
-            zone_centroid_x, zone_centroid_y,
-            zone_no_orders)
+               zone_centroid_x, zone_centroid_y,
+               zone_no_orders)
 
     #-------------------------------------------------------------------------
     #workshift = 8 for the tow legs. We assume independent resources and times
