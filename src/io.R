@@ -139,7 +139,7 @@ read_delivery_zone <- function(path, file_services, leg,
     zone_aux <- c(zones_ui[1, 3], zones_ui[1, 4],
                   zones_ui[1, 5], zones_ui[1, 6])
 
-    if (strtoi(zone_aux[1]) == 1 || strtoi(zone_aux[3] == 1)) {
+    if (strtoi(zone_aux[1]) == 1 || strtoi(zone_aux[3]) == 1) {
       if (strtoi(zone_aux[1]) == 1) { # the case of Madrid
         str_url <- zone_aux[2]
         str_file_name <- paste(dirname(path), zone_aux[4], sep = "/")
